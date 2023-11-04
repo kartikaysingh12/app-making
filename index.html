@@ -1,0 +1,37 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+<title>Expense Tracking</title>
+</head>
+<body>
+<header id="main-header" class="bg-success text-white p-4 mb-3"style="background-color: grey;">
+  <div class="container">
+    <h1 id="header-title">Expense Tracker App</h1>
+  </div>
+</header>
+<div class="container">
+ <div id="main" class="card card-body">
+  <h2 class="title">Track your expenses</h2>
+  <form id="addForm" class="form-inline mb-3">
+
+    <label for="Choose Expense"style="font-weight: bold">Choose Expense</label>
+    <input type="number" class="form-control mr-2" id="Choose Expense" placeholder="Enter Your Expense">
+    <label for="Description"style="font-weight: bold">Description</label>
+    <input type="text" name="Description" id="Description" class="form-control mr-2"placeholder="Enter Your description">
+    <label for="Category">Category</label>
+    <select name="Category" id="Category">
+        <option value="fuel">Fuel</option>
+        <option value="food">Food</option>
+        <option value="electricity">Electricity</option>
+        <option value="movie">Movie</option>
+    </select>
+    <input type="submit" class="btn btn-dark" value="AddExpense">
+    <ul id="items" class="list-group">
+    </ul>
+  </form>
+ </div>
+</div>
+<script src="app.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+</body>
+</html>
