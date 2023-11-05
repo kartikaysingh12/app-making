@@ -1,6 +1,16 @@
 var form = document.getElementById('addForm');
 var itemList = document.getElementById('items');
 form.addEventListener('submit', addItem);
+window.addEventListener("DOMContentLoaded",()=>{
+    axios.get("https://crudcrud.com/api/78052227c615401abfa854f1f0f04f36/appointmentData")
+    .then((response)=>{
+        console.log(response)
+        for(var i=0;i<response.data.length;i++){
+            addItem(response.data[i])
+        }
+    })
+    .catch((err)=>console.log(err))
+})
 
 // Add item
 function addItem(e){
