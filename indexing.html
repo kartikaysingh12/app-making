@@ -3,46 +3,35 @@
 <body>
   <form onsubmit="saveToLocalStorage(event)">
 
-    <label>Choose Price</label>
-    <input type="text" placeholder="Enter Your Price" name="CP">
-    <label>Choose Your Dish</label>
-    <select name="CYD" >
-      <option value="biryani">Biryani</option>
-      <option value="dosa">Dosa</option>
-      <option value="maggie">Maggie</option>
-      <option value="tea">Tea</option>
-    </select>
-    <label>Choose a Table</label>
-    <select name="table" id="table">
-      <option value="table1">TABLE 1</option>
-      <option value="table2">TABLE 2</option>
-      <option value="table3">TABLE 3</option>
-    </select>
-    <button>Add to Bill</button>
+    <label>Selling Price</label>
+    <input type="number" placeholder="Enter Your Price" name="SP">
+    <label>Product name</label>
+    <input type="text" name="PD" placeholder="product name">
+    <button>Add to cart</button>
   </form>
+  <h2>Product total price</h2>
   <ul id="items"></ul>
   
   <script>
     function saveToLocalStorage(event) {
       event.preventDefault();
-      const price = event.target.CP.value;
-      const dish = event.target.CYD.value;
-      const table = event.target.table.value;
+      const sp = event.target.SP.value;
+      const name = event.target.PD.value;
       const obj = {
-        price,
-        dish,
-        table
+        sp,
+        name
+        
       }
       axios.post("https://crudcrud.com/api/ddaa2851aa544ec2bbabab0e016ea177/appointmentData",obj)
       .then((response) => {
-        showUserOnScreen(response.data)
+       // showUserOnScreen(response.data)
           console.log(response);
         })
         .catch((err) => {
           console.log(err);
         })
-      //localStorage.setItem(obj.email, JSON.stringify(obj))
-     // showUserOnScreen(obj)
+      localStorage.setItem(obj.sp, JSON.stringify(obj))
+       showUserOnScreen(obj)
     }
     window.addEventListener("DOMContentLoaded",()=>{
       axios.get("https://crudcrud.com/api/ddaa2851aa544ec2bbabab0e016ea177/appointmentData")
@@ -53,28 +42,28 @@
       for(var i=0;i<response.data.length;i++){
         showUserOnScreen(response.data[i])
       }
-      // const localStorageObj=localStorage;
-      // const localStoragekeys=Object.keys(localStorageObj)
-      // for (var i=0;i<localStoragekeys.length;i++)
-      // {
-      //   const key=localStoragekeys[i]
-      //   const userdetail=localStorageObj[key];
-      //   const userdetailObj=JSON.parse(userdetail);
-      //   showUserOnScreen(userdetailObj)
-      // }
+      const localStorageObj=localStorage;
+      const localStoragekeys=Object.keys(localStorageObj)
+      for (var i=0;i<localStoragekeys.length;i++)
+      {
+      const key=localStoragekeys[i]
+      const userdetail=localStorageObj[key];
+     const userdetailObj=JSON.parse(userdetail);
+      showUserOnScreen(userdetailObj)
+      }
     })
 
     function showUserOnScreen(user) {
       const parentElem = document.getElementById('items')
       const childElem = document.createElement('li')
-      childElem.textContent = user.price + '-' + user.dish + '-' + user.table;
+      childElem.textContent = user.sp + '-' + user.name 
       parentElem.appendChild(childElem)
       const deleteBtn = document.createElement('input')
       deleteBtn.type = "button"
       deleteBtn.value = 'delete'
       deleteBtn.onclick = () => {
         axios.delete(`https://crudcrud.com/api/ddaa2851aa544ec2bbabab0e016ea177/appointmentData/${user._id}`)
-        //localStorage.removeItem(obj.email)
+        localStorage.removeItem(user.sp)
         parentElem.removeChild(childElem)
       }
       childElem.appendChild(deleteBtn)
@@ -82,12 +71,11 @@
       editBtn.type = "button"
       editBtn.value = 'edit'
       editBtn.onclick = () => {
-        //localStorage.removeItem(obj.email)
+        localStorage.removeItem(user.sp)
         parentElem.removeChild(childElem)
         axios.delete(`https://crudcrud.com/api/ddaa2851aa544ec2bbabab0e016ea177/appointmentData/${user._id}`)
-        document.getElementById('usernameInputTag').value = obj.price
-        document.getElementById('emailInputTag').value = obj.dish
-        document.getElementById('phonenumberInputTag').value = obj.table
+        document.getElementById('usernameInputTag').value = obj.sp
+        document.getElementById('emailInputTag').value = obj.name
       }
       childElem.appendChild(editBtn)
 
