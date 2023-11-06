@@ -1,37 +1,87 @@
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-<title>Expense Tracking</title>
-</head>
-<body>
-<header id="main-header" class="bg-success text-white p-4 mb-3"style="background-color: grey;">
-  <div class="container">
-    <h1 id="header-title">Expense Tracker App</h1>
-  </div>
-</header>
-<div class="container">
- <div id="main" class="card card-body">
-  <h2 class="title">Track your expenses</h2>
-  <form id="addForm" class="form-inline mb-3">
+<html>
 
-    <label for="Choose Expense"style="font-weight: bold">Choose Expense</label>
-    <input type="number" class="form-control mr-2" id="Choose Expense" placeholder="Enter Your Expense">
-    <label for="Description"style="font-weight: bold">Description</label>
-    <input type="text" name="Description" id="Description" class="form-control mr-2"placeholder="Enter Your description">
-    <label for="Category">Category</label>
-    <select name="Category" id="Category">
-        <option value="fuel">Fuel</option>
-        <option value="food">Food</option>
-        <option value="electricity">Electricity</option>
-        <option value="movie">Movie</option>
-    </select>
-    <input type="submit" class="btn btn-dark" value="AddExpense">
-    <ul id="items" class="list-group">
-    </ul>
+<body>
+  <form onsubmit="saveToLocalStorage(event)">
+
+    <label>NAME</label>
+    <input type="text" placeholder="Enter Your Name" name="username">
+    <label>EMAIL</label>
+    <input type="email" placeholder="Enter Your email" name="emailId">
+    <label>Number</label>
+    <input type="tel" placeholder="enter number" name="phonenumber">
+    <button>submit</button>
   </form>
- </div>
-</div>
-<script src="app.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+  <ul id="items"></ul>
+  
+  <script>
+    function saveToLocalStorage(event) {
+      event.preventDefault();
+      const name = event.target.username.value;
+      const email = event.target.emailId.value;
+      const phonenumber = event.target.phonenumber.value;
+      const obj = {
+        name,
+        email,
+        phonenumber
+      }
+      axios.post("https://crudcrud.com/api/ddaa2851aa544ec2bbabab0e016ea177/appointmentData",obj)
+      .then((response) => {
+          showUserOnScreen(response.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+      //localStorage.setItem(obj.email, JSON.stringify(obj))
+      //showUserOnScreen(obj)
+    }
+    window.addEventListener("DOMContentLoaded",()=>{
+    axios.get("https://crudcrud.com/api/78052227c615401abfa854f1f0f04f36/appointmentData")
+    .then((response)=>{
+        console.log(response)
+        for(var i=0;i<response.data.length;i++){
+            addItem(response.data[i])
+        }
+    })
+    .catch((err)=>console.log(err))
+})
+
+    function showUserOnScreen(user) {
+      user={
+        _id:'',
+        name:'',
+        email:'',
+        phonenumber:''
+      }
+      const parentElem = document.getElementById('items')
+      const childElem = document.createElement('li')
+      childElem.textContent = user.name + '-' + user.email + '-' + user.phonenumber;
+      parentElem.appendChild(childElem)
+      const deleteBtn = document.createElement('input')
+      deleteBtn.type = "button"
+      deleteBtn.value = 'delete'
+      deleteBtn.onclick = () => {
+        axios.delete(`https://crudcrud.com/api/78052227c615401abfa854f1f0f04f36/appointmentData/${user._id}`)
+        .then((response)=>{parentElem.removeChild(childElem)})
+        .catch((err)=>console.log(err))
+        
+      }
+      childElem.appendChild(deleteBtn)
+      const editBtn = document.createElement('input')
+      editBtn.type = "button"
+      editBtn.value = 'edit'
+      editBtn.onclick = () => {
+        localStorage.removeItem(obj.email)
+        parentElem.removeChild(childElem)
+        document.getElementById('usernameInputTag').value = obj.name
+        document.getElementById('emailInputTag').value = obj.email
+        document.getElementById('phonenumberInputTag').value = obj.phonenumber
+      }
+      childElem.appendChild(editBtn)
+
+    }
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+  
 </body>
+
 </html>
