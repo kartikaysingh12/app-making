@@ -3,26 +3,35 @@
 <body>
   <form onsubmit="saveToLocalStorage(event)">
 
-    <label>NAME</label>
-    <input type="text" placeholder="Enter Your Name" name="username">
-    <label>EMAIL</label>
-    <input type="email" placeholder="Enter Your email" name="emailId">
-    <label>Number</label>
-    <input type="tel" placeholder="enter number" name="phonenumber">
-    <button>submit</button>
+    <label>Choose Price</label>
+    <input type="text" placeholder="Enter Your Price" name="CP">
+    <label>Choose Your Dish</label>
+    <select name="CYD" >
+      <option value="biryani">Biryani</option>
+      <option value="dosa">Dosa</option>
+      <option value="maggie">Maggie</option>
+      <option value="tea">Tea</option>
+    </select>
+    <label>Choose a Table</label>
+    <select name="table" id="table">
+      <option value="table1">TABLE 1</option>
+      <option value="table2">TABLE 2</option>
+      <option value="table3">TABLE 3</option>
+    </select>
+    <button>Add to Bill</button>
   </form>
   <ul id="items"></ul>
   
   <script>
     function saveToLocalStorage(event) {
       event.preventDefault();
-      const name = event.target.username.value;
-      const email = event.target.emailId.value;
-      const phonenumber = event.target.phonenumber.value;
+      const price = event.target.CP.value;
+      const dish = event.target.CYD.value;
+      const table = event.target.table.value;
       const obj = {
-        name,
-        email,
-        phonenumber
+        price,
+        dish,
+        table
       }
       axios.post("https://crudcrud.com/api/ddaa2851aa544ec2bbabab0e016ea177/appointmentData",obj)
       .then((response) => {
@@ -58,7 +67,7 @@
     function showUserOnScreen(user) {
       const parentElem = document.getElementById('items')
       const childElem = document.createElement('li')
-      childElem.textContent = user._id+'-'+user.name + '-' + user.email + '-' + user.phonenumber;
+      childElem.textContent = user.price + '-' + user.dish + '-' + user.table;
       parentElem.appendChild(childElem)
       const deleteBtn = document.createElement('input')
       deleteBtn.type = "button"
@@ -76,9 +85,9 @@
         //localStorage.removeItem(obj.email)
         parentElem.removeChild(childElem)
         axios.delete(`https://crudcrud.com/api/ddaa2851aa544ec2bbabab0e016ea177/appointmentData/${user._id}`)
-        document.getElementById('usernameInputTag').value = obj.name
-        document.getElementById('emailInputTag').value = obj.email
-        document.getElementById('phonenumberInputTag').value = obj.phonenumber
+        document.getElementById('usernameInputTag').value = obj.price
+        document.getElementById('emailInputTag').value = obj.dish
+        document.getElementById('phonenumberInputTag').value = obj.table
       }
       childElem.appendChild(editBtn)
 
